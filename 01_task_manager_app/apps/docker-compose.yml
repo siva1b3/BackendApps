@@ -1,0 +1,34 @@
+networks:
+  apps_network:
+    name: apps_network  # Explicit network name to avoid prefixing
+    driver: bridge
+
+services:
+  task_postgres:
+    image: postgres:latest
+    container_name: task_postgres
+    environment:
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: admin
+      POSTGRES_DB: task_manager
+    ports:
+      - "5432:5432"
+    volumes:
+      - ./postgres_data:/var/lib/postgresql/data
+    networks:
+      - apps_network
+
+  task_pgadmin:
+    image: dpage/pgadmin4:latest
+    container_name: task_pgadmin
+    environment:
+      PGADMIN_DEFAULT_EMAIL: admin@admin.com
+      PGADMIN_DEFAULT_PASSWORD: admin
+    ports:
+      - "8080:80"
+    depends_on:
+      - task_postgres
+    volumes:
+      - ./pgadmin_data:/var/lib/pgadmin
+    networks:
+      - apps_network

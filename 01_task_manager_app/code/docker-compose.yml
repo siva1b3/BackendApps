@@ -1,0 +1,15 @@
+services:
+  node-app:
+    build:
+      context: ./express_app  # Use the `app/` folder as the build context
+    container_name: node-container
+    restart: always
+    volumes:
+      - ./express_app:/app  # Bind mount: Maps the `app` folder on the host to `/app` in the container
+    networks:
+      - code_network  # Connect the container to the `code_network` network
+
+networks:
+  code_network:
+    name: code_network  # Explicit network name to avoid prefixing
+    driver: bridge
